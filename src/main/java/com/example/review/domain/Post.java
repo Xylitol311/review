@@ -31,7 +31,7 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime postUpdatedDate;
     private LocalDateTime postDeletedDate;
-    @ColumnDefault("0")
+    @ColumnDefault("0") // h2 db 생성 시에 기본 컬럼값을 0으로 지정. null값이 아닌 아무 값도 입력되지 않으면 0으로 입력된다.
     private Long postCommentCount;
     @ManyToOne
     private Member member;

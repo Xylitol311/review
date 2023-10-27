@@ -1,12 +1,11 @@
 package com.example.review.type;
 
 public enum PostCategory {
-    Life,
-    Trip,
-    Food,
-    Culture,
-    Entertainment,
+    LIFE,
+    TRIP,
+    FOOD,
+    CULTURE,
+    ENTERTAINMENT,
     IT,
-    Sports,
-    News
+    SPORTS
 }
