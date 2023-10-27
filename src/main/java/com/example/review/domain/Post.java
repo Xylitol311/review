@@ -1,22 +1,29 @@
 package com.example.review.domain;
 
+import com.example.review.type.PostCategory;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
     @Id
     @GeneratedValue
     private Long postId;
     private String title;
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
     private String text;
     
     @CreatedDate
@@ -25,7 +32,7 @@ public class Post {
     private LocalDateTime postUpdatedDate;
     private LocalDateTime postDeletedDate;
     @ColumnDefault("0")
-    private String postCommentCount;
+    private Long postCommentCount;
     @ManyToOne
     private Member member;
     
