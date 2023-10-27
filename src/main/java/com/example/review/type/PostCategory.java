@@ -1,6 +1,6 @@
 package com.example.review.type;
 
-public enum Category {
+public enum PostCategory {
     Life,
     Trip,
     Food,
