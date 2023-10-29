@@ -1,14 +1,14 @@
 package com.example.review.dto;
 
-import com.example.review.domain.Member;
+import com.example.review.type.PostCategory;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PostCreatRequestDto {
+public class PostCreatResponseDto {
     private String title;
-    private String category;
+    private PostCategory category;
     private String text;
     private Long memberId;
 }
