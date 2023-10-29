@@ -1,6 +1,7 @@
 package com.example.review.controller;
 
 import com.example.review.dto.PostCreatRequestDto;
+import com.example.review.dto.PostDeleteRequestDto;
 import com.example.review.dto.PostUpdateRequestDto;
 import com.example.review.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,10 @@ public class PostController {
     @PostMapping("/update")
     public String postUpdate(@RequestParam Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto) {
         return postService.updatePost(postId, postUpdateRequestDto);
+    }
+    
+    @DeleteMapping("/delete")
+    public String postDelete(@RequestParam Long postId, @RequestBody @Valid PostDeleteRequestDto postDeleteRequestDto) {
+        return postService.deletePost(postId, postDeleteRequestDto);
     }
 }

@@ -3,6 +3,7 @@ package com.example.review.service;
 import com.example.review.domain.Member;
 import com.example.review.domain.Post;
 import com.example.review.dto.PostCreatRequestDto;
+import com.example.review.dto.PostDeleteRequestDto;
 import com.example.review.dto.PostUpdateRequestDto;
 import com.example.review.repository.MemberRepository;
 import com.example.review.repository.PostRepository;
@@ -60,4 +61,22 @@ public class PostService {
         postRepository.save(nowPost);
         return "success";
     }
+    
+    public String deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
+        // Post가 있는지 확인
+        if (postRepository.findById(postId).isEmpty()) {
+            return "해당 포스트가 없습니다.";
+        }
+        Post deletePost = postRepository.findById(postId).get();
+        
+        // 권한이 있는지 확인
+        if (deletePost.getMember().getMemberId() != postDeleteRequestDto.getMemberId()) {
+            return "삭제 권한이 없습니다.";
+        }
+        
+        postRepository.delete(deletePost);
+        return "success";
+    }
+    
+    
 }
