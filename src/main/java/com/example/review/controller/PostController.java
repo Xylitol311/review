@@ -20,8 +20,8 @@ public class PostController {
         return postService.createPost(postCreatRequestDto);
     }
     
-//    @PostMapping("/update")
-//    public String postUpdate(@RequestParam Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto) {
-//        return postService.updatePost(postId, postUpdateRequestDto);
-//    }
+    @PostMapping("/update")
+    public String postUpdate(@RequestParam Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto) {
+        return postService.updatePost(postId, postUpdateRequestDto);
+    }
 }

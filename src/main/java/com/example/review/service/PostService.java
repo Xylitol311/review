@@ -38,25 +38,26 @@ public class PostService {
         return "success";
     }
     
-//    public String updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-//        // Post가 있는지 확인
-//        if (postRepository.findById(postId).isEmpty()) {
-//            return "해당 포스트가 없습니다.";
-//        }
-//        Post nowPost = postRepository.findById(postId).get();
-//
-//        // 권한이 있는지 확인
-//        if (nowPost.getMember().getMemberId() != postUpdateRequestDto.getMemberId()) {
-//            return "수정 권한이 없습니다.";
-//        }
-//
-//        nowPost.setTitle(postUpdateRequestDto.getTitle());
-//
-//        // 카테고리 설정. 예외처리 필요
-//        PostCategory nowPostCategory = PostCategory.valueOf(postUpdateRequestDto.getCategory().toUpperCase());
-//        nowPost.setCategory(nowPostCategory);
-//
-//        nowPost.setText(postUpdateRequestDto.getText());
-//        return "success";
-//    }
+    public String updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+        // Post가 있는지 확인
+        if (postRepository.findById(postId).isEmpty()) {
+            return "해당 포스트가 없습니다.";
+        }
+        Post nowPost = postRepository.findById(postId).get();
+
+        // 권한이 있는지 확인
+        if (nowPost.getMember().getMemberId() != postUpdateRequestDto.getMemberId()) {
+            return "수정 권한이 없습니다.";
+        }
+
+        nowPost.setTitle(postUpdateRequestDto.getTitle());
+
+        // 카테고리 설정. 예외처리 필요
+        PostCategory nowPostCategory = PostCategory.valueOf(postUpdateRequestDto.getCategory().toUpperCase());
+        nowPost.setCategory(nowPostCategory);
+
+        nowPost.setText(postUpdateRequestDto.getText());
+        postRepository.save(nowPost);
+        return "success";
+    }
 }
