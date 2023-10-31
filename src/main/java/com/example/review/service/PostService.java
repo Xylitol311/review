@@ -4,12 +4,15 @@ import com.example.review.domain.Member;
 import com.example.review.domain.Post;
 import com.example.review.dto.PostCreatRequestDto;
 import com.example.review.dto.PostDeleteRequestDto;
+import com.example.review.dto.PostListResponseDto;
 import com.example.review.dto.PostUpdateRequestDto;
 import com.example.review.repository.MemberRepository;
 import com.example.review.repository.PostRepository;
-import com.example.review.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,7 @@ public class PostService {
 
         Post nowPost = postRepository.findById(postId).get();
         // 권한이 있는지 확인
-        if (nowPost.getMember().getMemberId() != postUpdateRequestDto.getMemberId()) {
+        if (!nowPost.getMember().getMemberId().equals(postUpdateRequestDto.getMemberId())) {
             return "수정 권한이 없습니다.";
         }
         
@@ -65,7 +68,7 @@ public class PostService {
         Post deletePost = postRepository.findById(postId).get();
         
         // 권한이 있는지 확인
-        if (deletePost.getMember().getMemberId() != postDeleteRequestDto.getMemberId()) {
+        if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {
             return "삭제 권한이 없습니다.";
         }
         
@@ -73,5 +76,23 @@ public class PostService {
         return "success";
     }
     
-    
+    public List<PostListResponseDto> findAll() {
+        List<Post> posts = postRepository.findAll();
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder()
+                    .postId(post.getPostId())
+                    .title(post.getTitle())
+                    .category(post.getCategory())
+                    .postCreatedDate(post.getPostCreatedDate())
+                    .postCommentCount(post.getPostCommentCount())
+                    .memberId(post.getMember().getMemberId())
+                    .build();
+            
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
 }

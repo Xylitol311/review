@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) //의미 없는 객체의 무분별한 생성을 막을 수 있다
-//JPA Proxy 때문에 어쩔 수 없이 매개변수가 없는 기본 생성자를 만들었는데, 이걸 어디선가 잘못사용하면 불완전한 객체가 만들어질 수 있다.
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Builder
