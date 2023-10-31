@@ -1,5 +1,6 @@
 package com.example.review.dto;
 
+import com.example.review.type.PostCategory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class PostUpdateRequestDto {
     private String title;
-    private String category;
+    private PostCategory category;
     private String text;
     private Long memberId;
 }

@@ -1,6 +1,8 @@
 package com.example.review.dto;
 
 import com.example.review.domain.Member;
+import com.example.review.type.PostCategory;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class PostCreatRequestDto {
     private String title;
-    private String category;
+    private PostCategory category;
     private String text;
     private Long memberId;
 }

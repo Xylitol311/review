@@ -18,23 +18,21 @@ public class PostService {
     private final MemberRepository memberRepository;
     
     public String createPost(PostCreatRequestDto postCreatRequestDto) {
-        Post post = new Post();
-        
-        // 카테고리 입력
-        // 예외처리 필요
-        PostCategory postCategory = PostCategory.valueOf(postCreatRequestDto.getCategory().toUpperCase());
-        post.setCategory(postCategory);
         
         // 멤버 객체 입력
         if (memberRepository.findById(postCreatRequestDto.getMemberId()).isEmpty()) {
             return "해당 유저는 없습니다.";
         }
         Member nowMember = memberRepository.findById(postCreatRequestDto.getMemberId()).get();
-        post.setMember(nowMember);
         
-        post.setTitle(postCreatRequestDto.getTitle());
-        post.setText(postCreatRequestDto.getText());
-        post.setPostCommentCount(0L);
+        Post post = Post.builder()
+                .title(postCreatRequestDto.getTitle())
+                .category(postCreatRequestDto.getCategory())
+                .text(postCreatRequestDto.getText())
+                .member(nowMember)
+                .postCommentCount(0L)
+                .build();
+        
         postRepository.save(post);
         return "success";
     }
@@ -44,20 +42,17 @@ public class PostService {
         if (postRepository.findById(postId).isEmpty()) {
             return "해당 포스트가 없습니다.";
         }
-        Post nowPost = postRepository.findById(postId).get();
 
+        Post nowPost = postRepository.findById(postId).get();
         // 권한이 있는지 확인
         if (nowPost.getMember().getMemberId() != postUpdateRequestDto.getMemberId()) {
             return "수정 권한이 없습니다.";
         }
-
+        
         nowPost.setTitle(postUpdateRequestDto.getTitle());
-
-        // 카테고리 설정. 예외처리 필요
-        PostCategory nowPostCategory = PostCategory.valueOf(postUpdateRequestDto.getCategory().toUpperCase());
-        nowPost.setCategory(nowPostCategory);
-
+        nowPost.setCategory(postUpdateRequestDto.getCategory());
         nowPost.setText(postUpdateRequestDto.getText());
+        
         postRepository.save(nowPost);
         return "success";
     }
