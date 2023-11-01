@@ -155,13 +155,13 @@ public class PostService {
         return findPosts;
     }
     
-//    public PostResponseDto readPost(Long postId) {
-//        if (postRepository.findById(postId).isEmpty()) {
-//            return null;
-//        }
-//        Post nowPost = postRepository.findById(postId).get();
-//        PostResponseDto postResponseDto = PostResponseDto.builder(nowPost).build();
-//
-//        return postResponseDto;
-//    }
+    public PostResponseDto readPost(Long postId) {
+        if (postRepository.findById(postId).isEmpty()) {
+            return null;
+        }
+        Post nowPost = postRepository.findById(postId).get();
+        PostResponseDto postResponseDto = PostResponseDto.builder(nowPost).build();
+
+        return postResponseDto;
+    }
 }
