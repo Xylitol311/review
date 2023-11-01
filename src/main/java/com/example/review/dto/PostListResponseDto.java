@@ -1,21 +1,31 @@
 package com.example.review.dto;
 
+import com.example.review.domain.Post;
 import com.example.review.type.PostCategory;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(builderMethodName = "PostListResponseDtoBuilder")
 public class PostListResponseDto {
     private Long postId;
     private String title;
     private PostCategory category;
-    private LocalDateTime postCreatedDate;
+    private LocalDate postCreatedDate;
     private Long postCommentCount;
-    private Long memberId;
+    private String nickname;
     
+    public static PostListResponseDtoBuilder builder(Post post) {
+        return PostListResponseDtoBuilder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .category(post.getCategory())
+                .postCreatedDate(post.getPostCreatedDate())
+                .postCommentCount(post.getPostCommentCount())
+                .nickname(post.getMember().getNickname());
+    }
 }

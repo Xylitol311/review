@@ -5,11 +5,14 @@ import com.example.review.domain.Post;
 import com.example.review.dto.PostDeleteRequestDto;
 import com.example.review.dto.PostInputDto;
 import com.example.review.dto.PostListResponseDto;
+import com.example.review.dto.PostResponseDto;
 import com.example.review.repository.MemberRepository;
 import com.example.review.repository.PostRepository;
+import com.example.review.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +22,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     
-    public String createPost(PostInputDto postInputDto) {
+    public void createPost(PostInputDto postInputDto) {
         
         // 멤버 객체 입력
         if (memberRepository.findById(postInputDto.getMemberId()).isEmpty()) {
-            return "해당 유저는 없습니다.";
+            //예외처리
         }
+        
         Member nowMember = memberRepository.findById(postInputDto.getMemberId()).get();
         
         Post post = Post.builder()
@@ -36,19 +40,18 @@ public class PostService {
                 .build();
         
         postRepository.save(post);
-        return "success";
     }
     
-    public String updatePost(Long postId, PostInputDto postInputDto) {
+    public void updatePost(Long postId, PostInputDto postInputDto) {
         // Post가 있는지 확인
         if (postRepository.findById(postId).isEmpty()) {
-            return "해당 포스트가 없습니다.";
+            // 예외처리
         }
 
         Post nowPost = postRepository.findById(postId).get();
         // 권한이 있는지 확인
         if (!nowPost.getMember().getMemberId().equals(postInputDto.getMemberId())) {
-            return "수정 권한이 없습니다.";
+            // 예외처리
         }
         
         nowPost.setTitle(postInputDto.getTitle());
@@ -56,42 +59,109 @@ public class PostService {
         nowPost.setText(postInputDto.getText());
         
         postRepository.save(nowPost);
-        return "success";
     }
     
-    public String deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
+    public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
         // Post가 있는지 확인
         if (postRepository.findById(postId).isEmpty()) {
-            return "해당 포스트가 없습니다.";
+            // 예외처리
         }
+        
         Post deletePost = postRepository.findById(postId).get();
         
         // 권한이 있는지 확인
         if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {
-            return "삭제 권한이 없습니다.";
+            //예외처리
         }
         
         postRepository.delete(deletePost);
-        return "success";
     }
     
     public List<PostListResponseDto> findAll() {
         List<Post> posts = postRepository.findAll();
+        
         List<PostListResponseDto> findPosts = new ArrayList<>();
         
         for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder()
-                    .postId(post.getPostId())
-                    .title(post.getTitle())
-                    .category(post.getCategory())
-                    .postCreatedDate(post.getPostCreatedDate())
-                    .postCommentCount(post.getPostCommentCount())
-                    .memberId(post.getMember().getMemberId())
-                    .build();
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
+    public List<PostListResponseDto> findByTitle(String title) {
+        List<Post> posts = postRepository.findAllByTitle(title);
+        
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
+    
+    public List<PostListResponseDto> findByCategory(PostCategory category) {
+        
+        List<Post> posts = postRepository.findAllByCategory(category);
+        
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
+    
+    public List<PostListResponseDto> findByNickname(String nickname) {
+        List<Post> posts = postRepository.findAllByMember_Nickname(nickname);
+        
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
+    
+    public List<PostListResponseDto> findByCreatedDate(LocalDate createdDate) {
+        List<Post> posts = postRepository.findAllByPostCreatedDate(createdDate);
+        
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
             
             findPosts.add(findPost);
         }
         
         return findPosts;
     }
+    
+    public List<PostListResponseDto> findByMemberId(Long memberId) {
+        List<Post> posts = postRepository.findAllByMember_MemberId(memberId);
+        List<PostListResponseDto> findPosts = new ArrayList<>();
+        
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            findPosts.add(findPost);
+        }
+        
+        return findPosts;
+    }
+    
+//    public PostResponseDto readPost(Long postId) {
+//        if (postRepository.findById(postId).isEmpty()) {
+//            return null;
+//        }
+//        Post nowPost = postRepository.findById(postId).get();
+//        PostResponseDto postResponseDto = PostResponseDto.builder(nowPost).build();
+//
+//        return postResponseDto;
+//    }
 }
