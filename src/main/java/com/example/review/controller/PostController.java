@@ -27,19 +27,19 @@ public class PostController {
         return ResponseEntity.ok("success");
     }
     
-    @PostMapping("/update/{postId}")
+    @PutMapping("/{postId}")
     public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostInputDto postInputDto) {
         postService.updatePost(postId, postInputDto);
         return ResponseEntity.ok("success");
     }
     
-    @DeleteMapping("/delete/{postId}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId, @RequestBody @Valid PostDeleteRequestDto postDeleteRequestDto) {
         postService.deletePost(postId, postDeleteRequestDto);
         return ResponseEntity.ok("success");
     }
     
-    @GetMapping
+    @GetMapping("/all")
     public List<PostListResponseDto> findAllPost() {
         return postService.findAll();
     }
@@ -69,7 +69,7 @@ public class PostController {
         return postService.findByMemberId(memberId);
     }
     
-    @GetMapping("/read/{postId}")
+    @GetMapping("/{postId}")
     public PostResponseDto readPost(@PathVariable Long postId) {
         return postService.readPost(postId);
     }
