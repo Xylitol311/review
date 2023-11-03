@@ -1,11 +1,11 @@
-package com.example.review.controller;
+package com.example.review.post.controller;
 
-import com.example.review.dto.PostDeleteRequestDto;
-import com.example.review.dto.PostInputDto;
-import com.example.review.dto.PostListResponseDto;
-import com.example.review.dto.PostResponseDto;
-import com.example.review.service.PostService;
-import com.example.review.type.PostCategory;
+import com.example.review.post.dto.PostDeleteRequestDto;
+import com.example.review.post.dto.PostInputDto;
+import com.example.review.post.dto.PostListResponseDto;
+import com.example.review.post.dto.PostResponseDto;
+import com.example.review.post.service.PostService;
+import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.example.review.repository;
+package com.example.review.post.repository;
 
-import com.example.review.domain.Member;
+import com.example.review.post.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {

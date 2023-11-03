@@ -1,4 +1,4 @@
-package com.example.review.domain;
+package com.example.review.post.domain;
 
 import lombok.*;
 

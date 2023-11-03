@@ -1,6 +1,6 @@
-package com.example.review.dto;
+package com.example.review.post.dto;
 
-import com.example.review.type.PostCategory;
+import com.example.review.post.type.PostCategory;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,7 @@
-package com.example.review.dto;
+package com.example.review.post.dto;
 
-import com.example.review.domain.Post;
-import com.example.review.type.PostCategory;
+import com.example.review.post.domain.Post;
+import com.example.review.post.type.PostCategory;
 import lombok.*;
 
 import java.time.LocalDate;

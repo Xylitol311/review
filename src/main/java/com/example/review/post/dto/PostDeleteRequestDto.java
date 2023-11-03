@@ -1,4 +1,4 @@
-package com.example.review.dto;
+package com.example.review.post.dto;
 
 import lombok.Getter;
 import lombok.Setter;

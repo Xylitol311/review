@@ -1,4 +1,4 @@
-package com.example.review.type;
+package com.example.review.post.type;
 
 public enum PostCategory {
     LIFE,

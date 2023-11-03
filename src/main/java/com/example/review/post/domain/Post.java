@@ -1,6 +1,6 @@
-package com.example.review.domain;
+package com.example.review.post.domain;
 
-import com.example.review.type.PostCategory;
+import com.example.review.post.type.PostCategory;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;

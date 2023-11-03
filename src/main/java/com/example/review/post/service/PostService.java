@@ -1,14 +1,14 @@
-package com.example.review.service;
+package com.example.review.post.service;
 
-import com.example.review.domain.Member;
-import com.example.review.domain.Post;
-import com.example.review.dto.PostDeleteRequestDto;
-import com.example.review.dto.PostInputDto;
-import com.example.review.dto.PostListResponseDto;
-import com.example.review.dto.PostResponseDto;
-import com.example.review.repository.MemberRepository;
-import com.example.review.repository.PostRepository;
-import com.example.review.type.PostCategory;
+import com.example.review.post.domain.Member;
+import com.example.review.post.domain.Post;
+import com.example.review.post.dto.PostDeleteRequestDto;
+import com.example.review.post.dto.PostInputDto;
+import com.example.review.post.dto.PostListResponseDto;
+import com.example.review.post.dto.PostResponseDto;
+import com.example.review.post.repository.MemberRepository;
+import com.example.review.post.repository.PostRepository;
+import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
