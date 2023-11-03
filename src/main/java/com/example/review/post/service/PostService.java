@@ -4,10 +4,7 @@ import com.example.review.exception.ErrorCode;
 import com.example.review.exception.PostNotFoundException;
 import com.example.review.post.domain.Member;
 import com.example.review.post.domain.Post;
-import com.example.review.post.dto.PostDeleteRequestDto;
-import com.example.review.post.dto.PostInputDto;
-import com.example.review.post.dto.PostListResponseDto;
-import com.example.review.post.dto.PostResponseDto;
+import com.example.review.post.dto.*;
 import com.example.review.post.repository.MemberRepository;
 import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
@@ -24,19 +21,19 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     
-    public void createPost(PostInputDto postInputDto) {
+    public void createPost(PostCreateRequestDto postCreateRequestDto) {
         
         // 멤버 객체 입력
-        if (memberRepository.findById(postInputDto.getMemberId()).isEmpty()) {
+        if (memberRepository.findById(postCreateRequestDto.getMemberId()).isEmpty()) {
             //예외처리
         }
         
-        Member nowMember = memberRepository.findById(postInputDto.getMemberId()).get();
+        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).get();
         
         Post post = Post.builder()
-                .title(postInputDto.getTitle())
-                .category(postInputDto.getCategory())
-                .text(postInputDto.getText())
+                .title(postCreateRequestDto.getTitle())
+                .category(postCreateRequestDto.getCategory())
+                .text(postCreateRequestDto.getText())
                 .member(nowMember)
                 .postCommentCount(0L)
                 .build();
@@ -44,17 +41,17 @@ public class PostService {
         postRepository.save(post);
     }
     
-    public void updatePost(Long postId, PostInputDto postInputDto) {
+    public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
         Post nowPost = postRepository.findById(postId).orElseThrow(()->new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         
         // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
-        if (!nowPost.getMember().getMemberId().equals(postInputDto.getMemberId())) {
+        if (!nowPost.getMember().getMemberId().equals(postUpdateRequestDto.getMemberId())) {
             // 예외처리
         }
         
-        nowPost.setTitle(postInputDto.getTitle());
-        nowPost.setCategory(postInputDto.getCategory());
-        nowPost.setText(postInputDto.getText());
+        nowPost.setTitle(postUpdateRequestDto.getTitle());
+        nowPost.setCategory(postUpdateRequestDto.getCategory());
+        nowPost.setText(postUpdateRequestDto.getText());
         
         postRepository.save(nowPost);
     }

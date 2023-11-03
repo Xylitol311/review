@@ -1,9 +1,6 @@
 package com.example.review.post.controller;
 
-import com.example.review.post.dto.PostDeleteRequestDto;
-import com.example.review.post.dto.PostInputDto;
-import com.example.review.post.dto.PostListResponseDto;
-import com.example.review.post.dto.PostResponseDto;
+import com.example.review.post.dto.*;
 import com.example.review.post.service.PostService;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +19,14 @@ public class PostController {
     private final PostService postService;
     
     @PostMapping("/new")
-    public ResponseEntity<?> createPost(@RequestBody @Valid PostInputDto postInputDto) {
-        postService.createPost(postInputDto);
+    public ResponseEntity<?> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto) {
+        postService.createPost(postCreateRequestDto);
         return ResponseEntity.ok("success");
     }
     
     @PutMapping("/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostInputDto postInputDto) {
-        postService.updatePost(postId, postInputDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto) {
+        postService.updatePost(postId, postUpdateRequestDto);
         return ResponseEntity.ok("success");
     }
     
