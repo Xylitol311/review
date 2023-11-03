@@ -21,7 +21,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     
-    @PostMapping("/create")
+    @PostMapping("/new")
     public ResponseEntity<?> createPost(@RequestBody @Valid PostInputDto postInputDto) {
         postService.createPost(postInputDto);
         return ResponseEntity.ok("success");
@@ -45,31 +45,31 @@ public class PostController {
         return ResponseEntity.ok(listDto);
     }
     
-    @GetMapping("/search/title")
+    @GetMapping("/title")
     public ResponseEntity<List<PostListResponseDto>> findPostByTitle(@RequestParam String title) {
         List<PostListResponseDto> listDto = postService.findByTitle(title);
         return ResponseEntity.ok(listDto);
     }
     
-    @GetMapping("/search/category")
+    @GetMapping("/category")
     public ResponseEntity<List<PostListResponseDto>> findPostByCategory(@RequestParam PostCategory category) {
         List<PostListResponseDto> listDto = postService.findByCategory(category);
         return ResponseEntity.ok(listDto);
     }
     
-    @GetMapping("search/nickname")
+    @GetMapping("/nickname")
     public ResponseEntity<List<PostListResponseDto>> findPostByNickname(@RequestParam String nickname) {
         List<PostListResponseDto> listDto = postService.findByNickname(nickname);
         return ResponseEntity.ok(listDto);
     }
     
-    @GetMapping("search/date")
+    @GetMapping("/date")
     public ResponseEntity<List<PostListResponseDto>> findPostByCreatedDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
         List<PostListResponseDto> listDto = postService.findByCreatedDate(createdDate);
         return ResponseEntity.ok(listDto);
     }
     
-    @GetMapping("/search/memberId")
+    @GetMapping("/memberId")
     public ResponseEntity<List<PostListResponseDto>> findPostByMemberId(@RequestParam Long memberId) {
         List<PostListResponseDto> listDto = postService.findByMemberId(memberId);
         return ResponseEntity.ok(listDto);
