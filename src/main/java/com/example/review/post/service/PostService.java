@@ -1,5 +1,7 @@
 package com.example.review.post.service;
 
+import com.example.review.exception.ErrorCode;
+import com.example.review.exception.PostNotFoundException;
 import com.example.review.post.domain.Member;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.PostDeleteRequestDto;
@@ -43,13 +45,9 @@ public class PostService {
     }
     
     public void updatePost(Long postId, PostInputDto postInputDto) {
-        // Post가 있는지 확인
-        if (postRepository.findById(postId).isEmpty()) {
-            // 예외처리
-        }
-
-        Post nowPost = postRepository.findById(postId).get();
-        // 권한이 있는지 확인
+        Post nowPost = postRepository.findById(postId).orElseThrow(()->new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        
+        // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!nowPost.getMember().getMemberId().equals(postInputDto.getMemberId())) {
             // 예외처리
         }
@@ -62,14 +60,9 @@ public class PostService {
     }
     
     public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
-        // Post가 있는지 확인
-        if (postRepository.findById(postId).isEmpty()) {
-            // 예외처리
-        }
+        Post deletePost = postRepository.findById(postId).orElseThrow(()->new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         
-        Post deletePost = postRepository.findById(postId).get();
-        
-        // 권한이 있는지 확인
+        // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {
             //예외처리
         }
