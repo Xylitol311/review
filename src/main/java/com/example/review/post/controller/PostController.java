@@ -40,37 +40,44 @@ public class PostController {
     }
     
     @GetMapping("/all")
-    public List<PostListResponseDto> findAllPost() {
-        return postService.findAll();
+    public ResponseEntity<List<PostListResponseDto>> findAllPost() {
+        List<PostListResponseDto> listDto = postService.findAll();
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("/search/title")
-    public List<PostListResponseDto> findPostByTitle(@RequestParam String title) {
-        return postService.findByTitle(title);
+    public ResponseEntity<List<PostListResponseDto>> findPostByTitle(@RequestParam String title) {
+        List<PostListResponseDto> listDto = postService.findByTitle(title);
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("/search/category")
-    public List<PostListResponseDto> findPostByCategory(@RequestParam PostCategory category) {
-        return postService.findByCategory(category);
+    public ResponseEntity<List<PostListResponseDto>> findPostByCategory(@RequestParam PostCategory category) {
+        List<PostListResponseDto> listDto = postService.findByCategory(category);
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("search/nickname")
-    public List<PostListResponseDto> findPostByNickname(@RequestParam String nickname) {
-        return postService.findByNickname(nickname);
+    public ResponseEntity<List<PostListResponseDto>> findPostByNickname(@RequestParam String nickname) {
+        List<PostListResponseDto> listDto = postService.findByNickname(nickname);
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("search/date")
-    public List<PostListResponseDto> findPostByCreatedDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
-        return postService.findByCreatedDate(createdDate);
+    public ResponseEntity<List<PostListResponseDto>> findPostByCreatedDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
+        List<PostListResponseDto> listDto = postService.findByCreatedDate(createdDate);
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("/search/memberId")
-    public List<PostListResponseDto> findPostByMemberId(@RequestParam Long memberId) {
-        return postService.findByMemberId(memberId);
+    public ResponseEntity<List<PostListResponseDto>> findPostByMemberId(@RequestParam Long memberId) {
+        List<PostListResponseDto> listDto = postService.findByMemberId(memberId);
+        return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("/{postId}")
-    public PostResponseDto readPost(@PathVariable Long postId) {
-        return postService.readPost(postId);
+    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId) {
+        PostResponseDto postResponseDto = postService.readPost(postId);
+        return ResponseEntity.ok(postResponseDto);
     }
 }
