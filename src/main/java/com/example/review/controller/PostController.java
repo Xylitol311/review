@@ -1,7 +1,7 @@
 package com.example.review.controller;
 
-import com.example.review.dto.PostInputDto;
 import com.example.review.dto.PostDeleteRequestDto;
+import com.example.review.dto.PostInputDto;
 import com.example.review.dto.PostListResponseDto;
 import com.example.review.dto.PostResponseDto;
 import com.example.review.service.PostService;
@@ -40,49 +40,37 @@ public class PostController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<PostListResponseDto>> findAllPost() {
-        List<PostListResponseDto> postListResponseDtos = postService.findAll();
-        
-        return ResponseEntity.ok(postListResponseDtos);
+    public List<PostListResponseDto> findAllPost() {
+        return postService.findAll();
     }
     
     @GetMapping("/search/title")
-    public ResponseEntity<List<PostListResponseDto>> findPostByTitle(@RequestParam String title) {
-        List<PostListResponseDto> postListResponseDtos = postService.findByTitle(title);
-        return ResponseEntity.ok(postListResponseDtos);
+    public List<PostListResponseDto> findPostByTitle(@RequestParam String title) {
+        return postService.findByTitle(title);
     }
     
     @GetMapping("/search/category")
-    public ResponseEntity<List<PostListResponseDto>> findPostByCategory(@RequestParam PostCategory category) {
-        List<PostListResponseDto> postListResponseDtos = postService.findByCategory(category);
-        
-        return ResponseEntity.ok(postListResponseDtos);
+    public List<PostListResponseDto> findPostByCategory(@RequestParam PostCategory category) {
+        return postService.findByCategory(category);
     }
     
     @GetMapping("search/nickname")
-    public ResponseEntity<List<PostListResponseDto>> findPostByNickname(@RequestParam String nickname) {
-        
-        List<PostListResponseDto> postListResponseDtos = postService.findByNickname(nickname);
-        
-        return ResponseEntity.ok(postListResponseDtos);
+    public List<PostListResponseDto> findPostByNickname(@RequestParam String nickname) {
+        return postService.findByNickname(nickname);
     }
     
     @GetMapping("search/date")
-    public ResponseEntity<List<PostListResponseDto>> findPostByCreatedDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
-        List<PostListResponseDto> postListResponseDtos = postService.findByCreatedDate(createdDate);
-        return ResponseEntity.ok(postListResponseDtos);
-        
+    public List<PostListResponseDto> findPostByCreatedDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
+        return postService.findByCreatedDate(createdDate);
     }
     
     @GetMapping("/search/memberId")
-    public ResponseEntity<List<PostListResponseDto>> findPostByMemberId(@RequestParam Long memberId) {
-        List<PostListResponseDto> postListResponseDtos = postService.findByMemberId(memberId);
-        return ResponseEntity.ok(postListResponseDtos);
+    public List<PostListResponseDto> findPostByMemberId(@RequestParam Long memberId) {
+        return postService.findByMemberId(memberId);
     }
     
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId) {
-        PostResponseDto postResponseDto = postService.readPost(postId);
-        return ResponseEntity.ok(postResponseDto);
+    public PostResponseDto readPost(@PathVariable Long postId) {
+        return postService.readPost(postId);
     }
 }

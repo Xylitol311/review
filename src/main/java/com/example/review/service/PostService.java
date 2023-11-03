@@ -1,11 +1,11 @@
 package com.example.review.service;
 
-import com.example.review.dto.PostInputDto;
-import com.example.review.dto.PostResponseDto;
 import com.example.review.domain.Member;
 import com.example.review.domain.Post;
 import com.example.review.dto.PostDeleteRequestDto;
+import com.example.review.dto.PostInputDto;
 import com.example.review.dto.PostListResponseDto;
+import com.example.review.dto.PostResponseDto;
 import com.example.review.repository.MemberRepository;
 import com.example.review.repository.PostRepository;
 import com.example.review.type.PostCategory;
@@ -27,8 +27,6 @@ public class PostService {
         // 멤버 객체 입력
         if (memberRepository.findById(postInputDto.getMemberId()).isEmpty()) {
             //예외처리
-            // 회원 파트 구현 후 구현 예정
-            
         }
         
         Member nowMember = memberRepository.findById(postInputDto.getMemberId()).get();
