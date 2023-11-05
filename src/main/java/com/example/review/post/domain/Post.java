@@ -1,5 +1,6 @@
 package com.example.review.post.domain;
 
+import com.example.review.member.domain.Member;
 import com.example.review.post.type.PostCategory;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

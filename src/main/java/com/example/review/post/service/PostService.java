@@ -2,7 +2,7 @@ package com.example.review.post.service;
 
 import com.example.review.exception.ErrorCode;
 import com.example.review.exception.PostNotFoundException;
-import com.example.review.post.domain.Member;
+import com.example.review.member.domain.Member;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.*;
 import com.example.review.post.repository.MemberRepository;
