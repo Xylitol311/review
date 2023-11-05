@@ -154,4 +154,8 @@ public class PostService {
 
         return postResponseDto;
     }
+    
+    public Long countPostsByMemberId(Long memberId) {
+        return postRepository.findAllByMember_MemberId(memberId).stream().count();
+    }
 }

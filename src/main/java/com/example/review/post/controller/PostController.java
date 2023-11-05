@@ -77,4 +77,11 @@ public class PostController {
         PostResponseDto postResponseDto = postService.readPost(postId);
         return ResponseEntity.ok(postResponseDto);
     }
+    
+    // 회원 페이지에서 몇 개의 게시물을 작성했는지 확인하는 메서드
+    @GetMapping("/member/count")
+    public ResponseEntity<Long> countPostsByMemberId(@RequestParam Long memberId) {
+        Long countPosts = postService.countPostsByMemberId(memberId);
+        return ResponseEntity.ok(countPosts);
+    }
 }
