@@ -11,6 +11,7 @@ import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class PostService {
         
         postRepository.save(post);
     }
-    
+    @Transactional
     public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
         Post nowPost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         
@@ -47,8 +48,6 @@ public class PostService {
         nowPost.setTitle(postUpdateRequestDto.getTitle());
         nowPost.setCategory(postUpdateRequestDto.getCategory());
         nowPost.setText(postUpdateRequestDto.getText());
-        
-        postRepository.save(nowPost);
     }
     
     public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {

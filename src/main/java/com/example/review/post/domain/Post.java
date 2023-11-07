@@ -3,6 +3,7 @@ package com.example.review.post.domain;
 import com.example.review.post.type.PostCategory;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Builder
+@DynamicUpdate
 public class Post {
     @Id
     @GeneratedValue
