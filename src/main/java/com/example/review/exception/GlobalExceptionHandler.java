@@ -11,4 +11,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> postNotFoundExceptionHandler(PostNotFoundException e) {
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
     }
+    
+    @ExceptionHandler(MemberNotFoundException.class)
+    // 요청한 memberId에 해당하는 member가 존재하지 않음
+    public ResponseEntity<?> memberNotFoundExceptionHandler(MemberNotFoundException e) {
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
+    }
 }
