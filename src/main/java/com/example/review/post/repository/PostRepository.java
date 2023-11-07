@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     
     List<Post> findAllByMember_Nickname(String nickname);
     List<Post> findAllByMember_MemberId(Long memberId);
+    
+    Long countByMember_MemberId(Long memberId);
 }
