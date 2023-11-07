@@ -1,6 +1,7 @@
 package com.example.review.post.service;
 
 import com.example.review.exception.ErrorCode;
+import com.example.review.exception.MemberNotFoundException;
 import com.example.review.exception.PostNotFoundException;
 import com.example.review.post.domain.Member;
 import com.example.review.post.domain.Post;
@@ -22,13 +23,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
-        
-        // 멤버 객체 입력
-        if (memberRepository.findById(postCreateRequestDto.getMemberId()).isEmpty()) {
-            //예외처리
-        }
-        
-        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).get();
+        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, ErrorCode.MEMBER_NOT_FOUND.getMessage()));
         
         Post post = Post.builder()
                 .title(postCreateRequestDto.getTitle())
@@ -42,7 +37,7 @@ public class PostService {
     }
     
     public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post nowPost = postRepository.findById(postId).orElseThrow(()->new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Post nowPost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         
         // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!nowPost.getMember().getMemberId().equals(postUpdateRequestDto.getMemberId())) {
@@ -57,7 +52,7 @@ public class PostService {
     }
     
     public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
-        Post deletePost = postRepository.findById(postId).orElseThrow(()->new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Post deletePost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         
         // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {
@@ -79,6 +74,7 @@ public class PostService {
         
         return findPosts;
     }
+    
     public List<PostListResponseDto> findByTitle(String title) {
         List<Post> posts = postRepository.findAllByTitle(title);
         
@@ -151,7 +147,7 @@ public class PostService {
         }
         Post nowPost = postRepository.findById(postId).get();
         PostResponseDto postResponseDto = PostResponseDto.builder(nowPost).build();
-
+        
         return postResponseDto;
     }
     

@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found.");
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member not found.");
     
     private HttpStatus status;
     private String message;
