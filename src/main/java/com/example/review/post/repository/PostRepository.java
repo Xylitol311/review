@@ -2,18 +2,20 @@ package com.example.review.post.repository;
 
 import com.example.review.post.domain.Post;
 import com.example.review.post.type.PostCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findAllByTitle(String title);
-    List<Post> findAllByCategory(PostCategory postCategory);
-    List<Post> findAllByPostCreatedDate(LocalDate localDate);
+    Page<Post> findAll(Pageable pageable);
+    Page<Post> findAllByTitle(Pageable pageable, String title);
+    Page<Post> findAllByCategory(Pageable pageable, PostCategory postCategory);
+    Page<Post> findAllByPostCreatedDate(Pageable pageable, LocalDate postCreatedDate);
     
-    List<Post> findAllByMember_Nickname(String nickname);
-    List<Post> findAllByMember_MemberId(Long memberId);
+    Page<Post> findAllByMember_Nickname(Pageable pageable, String nickname);
+    Page<Post> findAllByMember_MemberId(Pageable pageable, Long memberId);
     
     Long countByMember_MemberId(Long memberId);
 }
