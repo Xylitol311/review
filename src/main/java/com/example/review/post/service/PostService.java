@@ -5,7 +5,7 @@ import com.example.review.exception.PostNotFoundException;
 import com.example.review.member.domain.Member;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.*;
-import com.example.review.post.repository.MemberRepository;
+import com.example.review.member.repository.MemberRepository;
 import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
