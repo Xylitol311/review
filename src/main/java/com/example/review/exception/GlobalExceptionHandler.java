@@ -11,4 +11,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> postNotFoundExceptionHandler(PostNotFoundException e) {
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
     }
+    @ExceptionHandler(UserNotFoundException.class)
+    // 요청한 postId가 존재하지 않음
+    public ResponseEntity<?> userNotFoundExceptionHandler(UserNotFoundException e) {
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
+    }
+    @ExceptionHandler(LoginIdExistsException.class)
+    // 요청한 postId가 존재하지 않음
+    public ResponseEntity<?> loginIdExistsExceptionHandler(LoginIdExistsException e) {
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
+    }
+    @ExceptionHandler(NicknameDuplicatedException.class)
+    // 요청한 postId가 존재하지 않음
+    public ResponseEntity<?> nicknameDuplicatedExceptionHandler(NicknameDuplicatedException e) {
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
+    }
 }
