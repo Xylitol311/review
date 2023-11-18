@@ -1,13 +1,21 @@
 package com.example.review.member.dto;
 
-import com.example.review.post.type.PostCategory;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 public class MemberSignupRequest {
-    private String loginId;
+    @NotBlank
+    private String username;
+    @NotBlank
     private String password;
+    @NotBlank
+    private String checkPassword;
+    private boolean admin = false;
+    private String adminToken = "";
+    @NotBlank
     private String nickname;
 }
