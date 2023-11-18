@@ -1,6 +1,7 @@
-package com.example.review.post.domain;
+package com.example.review.comment.domain;
 
 import com.example.review.member.domain.Member;
+import com.example.review.post.domain.Post;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
