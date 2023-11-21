@@ -6,35 +6,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(PostNotFoundException.class)
+    @ExceptionHandler(CustomException.class)
     // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> postNotFoundExceptionHandler(PostNotFoundException e) {
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
-    }
-    @ExceptionHandler(LoginIdExistsException.class)
-    // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> loginIdExistsExceptionHandler(LoginIdExistsException e) {
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
-    }
-    @ExceptionHandler(NicknameDuplicatedException.class)
-    // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> nicknameDuplicatedExceptionHandler(NicknameDuplicatedException e) {
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
-    }
-    @ExceptionHandler(UserNotFoundException.class)
-    // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> userNotFoundExceptionHandler(UserNotFoundException e) {
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
-    }
-    @ExceptionHandler(PasswordMismatchException.class)
-    // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> passwordMismatchExceptionHandler(PasswordMismatchException e) {
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
-    }
-    
-    @ExceptionHandler(NotMatchAdmin.class)
-    // 요청한 postId가 존재하지 않음
-    public ResponseEntity<?> notMatchAdminExceptionHandler(NotMatchAdmin e) {
+    public ResponseEntity<?> customExceptionHandler(CustomException e) {
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.toString());
     }
     

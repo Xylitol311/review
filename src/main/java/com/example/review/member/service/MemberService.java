@@ -26,24 +26,24 @@ public class MemberService {
         final String ADMIN_TOKEN = "fawoefjidkzhviuerl";
         // login id 중복 체크
         if (memberRepository.findByLoginId(request.getUsername()).isPresent()) {
-            throw new LoginIdExistsException(ErrorCode.LOGIN_ID_EXISTS, ErrorCode.LOGIN_ID_EXISTS.getMessage());
+            throw new CustomException(ErrorCode.LOGIN_ID_EXISTS);
         }
         
         // 닉네임 중복 체크
         if (memberRepository.findByNickname(request.getNickname()).isPresent()) {
-            throw new NicknameDuplicatedException(ErrorCode.NICKNAME_DUPLICATED, ErrorCode.NICKNAME_DUPLICATED.getMessage());
+            throw new CustomException(ErrorCode.NICKNAME_DUPLICATED);
         }
         
         // 비밀번호 일치 확인
         if (!request.getPassword().equals(request.getCheckPassword())) {
-            throw new PasswordMismatchException(ErrorCode.PASSWORD_MISMATCH, ErrorCode.PASSWORD_MISMATCH.getMessage());
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
         }
         
         // 사용자 ROLE 확인 (admin = true 일 경우 아래 코드 수행)
         Role role = Role.USER;
         if (request.isAdmin()) {
             if (!ADMIN_TOKEN.equals(request.getAdminToken())) {
-                throw new NotMatchAdmin(NOT_MATCH_ADMIN,NOT_MATCH_ADMIN.getMessage());
+                throw new CustomException(NOT_MATCH_ADMIN);
             }
             role = Role.ADMIN;
         }
