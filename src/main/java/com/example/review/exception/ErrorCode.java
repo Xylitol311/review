@@ -13,7 +13,8 @@ public enum ErrorCode {
     NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "Nickname is duplicated."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "Passwords do not match."),
     NOT_MATCH_ADMIN(HttpStatus.BAD_REQUEST, "Administrator password does not match."),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not found.");
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not found."),
+    AUTHORIZATION(HttpStatus.BAD_REQUEST, "You do not have permission.");
     
     private HttpStatus status;
     private String message;
