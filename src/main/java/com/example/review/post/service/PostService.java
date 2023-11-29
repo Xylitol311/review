@@ -1,14 +1,13 @@
 package com.example.review.post.service;
 
+import com.example.review.exception.CustomException;
 import com.example.review.exception.ErrorCode;
-import com.example.review.exception.MemberNotFoundException;
-import com.example.review.exception.PostNotFoundException;
 import com.example.review.member.domain.Member;
+import com.example.review.member.repository.MemberRepository;
 import com.example.review.pagination.PageInfo;
 import com.example.review.pagination.PageResponse;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.*;
-import com.example.review.member.repository.MemberRepository;
 import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,9 @@ public class PostService {
     
     @Transactional
     public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post nowPost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Post nowPost = postRepository.findById(postId).orElseThrow(
+                ()->new CustomException(ErrorCode.POST_NOT_FOUND)
+        );
         
         // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!nowPost.getMember().getMemberId().equals(postUpdateRequestDto.getMemberId())) {
@@ -60,7 +61,9 @@ public class PostService {
     }
     
     public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
-        Post deletePost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Post deletePost = postRepository.findById(postId).orElseThrow(
+                ()->new CustomException(ErrorCode.POST_NOT_FOUND)
+        );
         
         // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
         if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {

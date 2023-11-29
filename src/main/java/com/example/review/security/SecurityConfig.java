@@ -49,6 +49,7 @@ public class SecurityConfig{
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
     
+    // h2 console Spring Security 제외 설정
     @Bean
     @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {
