@@ -15,6 +15,7 @@ public class PostResponseDto {
     private Long postId;
     private String title;
     private PostCategory category;
+    private String text;
     private LocalDate postCreatedDate;
     private LocalDate postUpdatedDate;
     private Long postCommentCount;
@@ -26,6 +27,7 @@ public class PostResponseDto {
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .category(post.getCategory())
+                .text(post.getText())
                 .postCreatedDate(post.getPostCreatedDate())
                 .postUpdatedDate(post.getPostUpdatedDate())
                 .postCommentCount(post.getPostCommentCount())

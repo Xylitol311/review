@@ -4,14 +4,23 @@ import com.example.review.exception.CustomException;
 import com.example.review.exception.ErrorCode;
 import com.example.review.member.domain.Member;
 import com.example.review.member.repository.MemberRepository;
+import com.example.review.pagination.PageInfo;
+import com.example.review.pagination.PageResponse;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.*;
 import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +31,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
-        
-        // 멤버 객체 입력
-        if (memberRepository.findById(postCreateRequestDto.getMemberId()).isEmpty()) {
-            //예외처리
-        }
-        
-        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).get();
+        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, ErrorCode.MEMBER_NOT_FOUND.getMessage()));
         
         Post post = Post.builder()
                 .title(postCreateRequestDto.getTitle())
@@ -41,6 +44,7 @@ public class PostService {
         postRepository.save(post);
     }
     
+    @Transactional
     public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
         Post nowPost = postRepository.findById(postId).orElseThrow(
                 ()->new CustomException(ErrorCode.POST_NOT_FOUND)
@@ -54,8 +58,6 @@ public class PostService {
         nowPost.setTitle(postUpdateRequestDto.getTitle());
         nowPost.setCategory(postUpdateRequestDto.getCategory());
         nowPost.setText(postUpdateRequestDto.getText());
-        
-        postRepository.save(nowPost);
     }
     
     public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
@@ -71,95 +73,116 @@ public class PostService {
         postRepository.delete(deletePost);
     }
     
-    public List<PostListResponseDto> findAll() {
-        List<Post> posts = postRepository.findAll();
+    public PageResponse findAll(PageInfo pageInfo) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
         
-        List<PostListResponseDto> findPosts = new ArrayList<>();
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAll(pageable);
         
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            findPosts.add(findPost);
-        }
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return findPosts;
-    }
-    public List<PostListResponseDto> findByTitle(String title) {
-        List<Post> posts = postRepository.findAllByTitle(title);
-        
-        List<PostListResponseDto> findPosts = new ArrayList<>();
-        
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            findPosts.add(findPost);
-        }
-        
-        return findPosts;
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
     }
     
-    public List<PostListResponseDto> findByCategory(PostCategory category) {
+    public PageResponse findByTitle(PageInfo pageInfo, String title) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
         
-        List<Post> posts = postRepository.findAllByCategory(category);
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAllByTitle(pageable, title);
         
-        List<PostListResponseDto> findPosts = new ArrayList<>();
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            findPosts.add(findPost);
-        }
-        
-        return findPosts;
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
     }
     
-    public List<PostListResponseDto> findByNickname(String nickname) {
-        List<Post> posts = postRepository.findAllByMember_Nickname(nickname);
+    public PageResponse findByCategory(PageInfo pageInfo, PostCategory category) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
         
-        List<PostListResponseDto> findPosts = new ArrayList<>();
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAllByCategory(pageable, category);
         
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            findPosts.add(findPost);
-        }
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return findPosts;
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
     }
     
-    public List<PostListResponseDto> findByCreatedDate(LocalDate createdDate) {
-        List<Post> posts = postRepository.findAllByPostCreatedDate(createdDate);
+    public PageResponse findByNickname(PageInfo pageInfo, String nickname) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
         
-        List<PostListResponseDto> findPosts = new ArrayList<>();
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAllByMember_Nickname(pageable, nickname);
         
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            
-            findPosts.add(findPost);
-        }
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return findPosts;
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
     }
     
-    public List<PostListResponseDto> findByMemberId(Long memberId) {
-        List<Post> posts = postRepository.findAllByMember_MemberId(memberId);
-        List<PostListResponseDto> findPosts = new ArrayList<>();
+    public PageResponse findByCreatedDate(PageInfo pageInfo, LocalDate createdDate) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
         
-        for (Post post : posts) {
-            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
-            findPosts.add(findPost);
-        }
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAllByPostCreatedDate(pageable, createdDate);
         
-        return findPosts;
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
+        
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
     }
+    
+    public PageResponse findByMemberId(PageInfo pageInfo, Long memberId) {
+        // 정렬 기준에 따라 pageable 객체 초기화
+        Pageable pageable = createPageable(pageInfo);
+        
+        // 찾아온 데이터 Page 객체
+        Page<Post> postPage = postRepository.findAllByMember_MemberId(pageable, memberId);
+        
+        // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
+        List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
+        
+        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+    }
+    
     
     public PostResponseDto readPost(Long postId) {
         if (postRepository.findById(postId).isEmpty()) {
             return null;
         }
         Post nowPost = postRepository.findById(postId).get();
-        PostResponseDto postResponseDto = PostResponseDto.builder(nowPost).build();
-
-        return postResponseDto;
+        
+        return PostResponseDto.builder(nowPost).build();
     }
     
     public Long countPostsByMemberId(Long memberId) {
-        return postRepository.findAllByMember_MemberId(memberId).stream().count();
+        return postRepository.countByMember_MemberId(memberId);
+    }
+    
+    private Pageable createPageable(PageInfo pageInfo) {
+        Pageable pageable;
+        if (pageInfo.isDescending()) {
+            pageable = PageRequest.of(pageInfo.getPageNo(), pageInfo.getPageSize(), Sort.by(pageInfo.getSortBy()).descending());
+        } else {
+            pageable = PageRequest.of(pageInfo.getPageNo(), pageInfo.getPageSize(), Sort.by(pageInfo.getSortBy()).ascending());
+        }
+        return pageable;
+    }
+    
+    private List<PostListResponseDto> createPostListResponseDto(Page<Post> postPage) {
+        List<Post> posts = postPage.getContent();
+        List<PostListResponseDto> responseDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostListResponseDto findPost = PostListResponseDto.builder(post).build();
+            responseDtos.add(findPost);
+        }
+        
+        return responseDtos;
     }
 }
