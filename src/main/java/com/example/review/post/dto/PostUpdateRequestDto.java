@@ -10,5 +10,4 @@ public class PostUpdateRequestDto {
     private String title;
     private PostCategory category;
     private String text;
-    private Long memberId;
 }

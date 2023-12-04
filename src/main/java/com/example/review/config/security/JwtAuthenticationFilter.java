@@ -1,6 +1,6 @@
-package com.example.review.security;
+package com.example.review.config.security;
 
-import com.example.review.member.domain.Role;
+import com.example.review.member.domain.UserRoleEnum;
 import com.example.review.member.dto.MemberLoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +44,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername(); // username
-        Role role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();  // role
+        UserRoleEnum userRoleEnum = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserRoleEnum();  // role
         
-        String token = jwtUtil.createToken(username, role); // 로그인 성공 시, username, role을 담은 토큰 생성
+        String token = jwtUtil.createToken(username, userRoleEnum); // 로그인 성공 시, username, role을 담은 토큰 생성
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token); // 헤더에 해당 토큰 추가
     }
     

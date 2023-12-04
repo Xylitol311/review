@@ -1,6 +1,8 @@
 package com.example.review.post.domain;
 
 import com.example.review.member.domain.Member;
+import com.example.review.post.dto.PostCreateRequestDto;
+import com.example.review.post.dto.PostUpdateRequestDto;
 import com.example.review.post.type.PostCategory;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Builder
+@Builder(builderMethodName = "PostBuilder")
 @DynamicUpdate
 public class Post {
     @Id
@@ -39,5 +41,18 @@ public class Post {
     @ManyToOne
     private Member member;
     
+    public void update(PostUpdateRequestDto postUpdateRequestDto) {
+        this.title = postUpdateRequestDto.getTitle();
+        this.category = postUpdateRequestDto.getCategory();
+        this.text = postUpdateRequestDto.getText();
+    }
     
+    public static PostBuilder builder(PostCreateRequestDto postCreateRequestDto, Member member) {
+        return PostBuilder()
+                .title(postCreateRequestDto.getTitle())
+                .category(postCreateRequestDto.getCategory())
+                .text(postCreateRequestDto.getText())
+                .member(member)
+                .postCommentCount(0L);
+    }
 }

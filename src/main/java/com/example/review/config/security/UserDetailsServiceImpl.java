@@ -1,4 +1,4 @@
-package com.example.review.security;
+package com.example.review.config.security;
 
 import com.example.review.member.domain.Member;
 import com.example.review.member.repository.MemberRepository;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     
     public UserDetails loadUserByUsername(String username) {
         Member member = memberRepository.findByLoginId(username).orElseThrow(
