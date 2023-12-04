@@ -1,22 +1,25 @@
 package com.example.review.post.controller;
 
-import com.example.review.pagination.PageInfo;
-import com.example.review.pagination.PageResponse;
-import com.example.review.pagination.PostSortBy;
+import com.example.review.comment.pagination.CommentPageInfo;
+import com.example.review.config.security.UserDetailsImpl;
 import com.example.review.post.dto.PostCreateRequestDto;
 import com.example.review.post.dto.PostDeleteRequestDto;
 import com.example.review.post.dto.PostResponseDto;
 import com.example.review.post.dto.PostUpdateRequestDto;
+import com.example.review.post.pagination.PostPageInfo;
+import com.example.review.post.pagination.PostPageResponse;
+import com.example.review.post.pagination.PostSortBy;
 import com.example.review.post.service.PostService;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/post")
@@ -25,113 +28,109 @@ public class PostController {
     private final PostService postService;
     
     @PostMapping("/new")
-    public ResponseEntity<?> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto) {
-        postService.createPost(postCreateRequestDto);
-        return ResponseEntity.ok("success");
+    public ResponseEntity<?> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostResponseDto postResponseDto = postService.createPost(postCreateRequestDto, userDetails.getUser());
+        return ResponseEntity.ok(postResponseDto);
     }
     
     @PutMapping("/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto) {
-        postService.updatePost(postId, postUpdateRequestDto);
-        return ResponseEntity.ok("success");
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostResponseDto postResponseDto = postService.updatePost(postId, postUpdateRequestDto, userDetails.getUser());
+        return ResponseEntity.ok(postResponseDto);
     }
     
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId, @RequestBody @Valid PostDeleteRequestDto postDeleteRequestDto) {
-        postService.deletePost(postId, postDeleteRequestDto);
+    public ResponseEntity<?> deletePost(@PathVariable Long postId, PostDeleteRequestDto postDeleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(postId, postDeleteRequestDto, userDetails.getUser());
         return ResponseEntity.ok("success");
     }
     
     @GetMapping("/all")
-    public ResponseEntity<PageResponse> findAllPost(
+    public ResponseEntity<PostPageResponse> findAllPost(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
         
-        PageResponse pageResponse = postService.findAll(pageInfo);
-        return ResponseEntity.ok(pageResponse);
+        PostPageResponse postPageResponse = postService.findAll(postPageInfo);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/title")
-    public ResponseEntity<PageResponse> findPostByTitle(
+    public ResponseEntity<PostPageResponse> findPostByTitle(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending,
             @RequestParam String title
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
         
-        PageResponse pageResponse = postService.findByTitle(pageInfo, title);
-        return ResponseEntity.ok(pageResponse);
+        PostPageResponse postPageResponse = postService.findByTitle(postPageInfo, title);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/category")
-    public ResponseEntity<PageResponse> findPostByCategory(
+    public ResponseEntity<PostPageResponse> findPostByCategory(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending,
             @RequestParam PostCategory postCategory
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
         
-        PageResponse pageResponse = postService.findByCategory(pageInfo, postCategory);
-        return ResponseEntity.ok(pageResponse);
+        PostPageResponse postPageResponse = postService.findByCategory(postPageInfo, postCategory);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/nickname")
-    public ResponseEntity<PageResponse> findPostByNickname(
+    public ResponseEntity<PostPageResponse> findPostByNickname(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending,
             @RequestParam String nickname
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
         
-        PageResponse pageResponse = postService.findByNickname(pageInfo, nickname);
-        return ResponseEntity.ok(pageResponse);
+        PostPageResponse postPageResponse = postService.findByNickname(postPageInfo, nickname);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/date")
-    public ResponseEntity<PageResponse> findPostByCreatedDate(
+    public ResponseEntity<PostPageResponse> findPostByCreatedDate(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
-        PageResponse pageResponse = postService.findByCreatedDate(pageInfo, createdDate);
-        return ResponseEntity.ok(pageResponse);
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
+        PostPageResponse postPageResponse = postService.findByCreatedDate(postPageInfo, createdDate);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/memberId")
-    public ResponseEntity<PageResponse> findPostByMemberId(
+    public ResponseEntity<PostPageResponse> findPostByMemberId( // 회원 파트로 이동 고려
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "POST_CREATED_DATE", required = false) PostSortBy sortBy,
             @RequestParam(value = "isDescending", defaultValue = "true") boolean isDescending,
             @RequestParam Long memberId
     ) {
-        PageInfo pageInfo = PageInfo.builder(pageNo, pageSize, sortBy, isDescending).build();
-        
-        PageResponse pageResponse = postService.findByMemberId(pageInfo, memberId);
-        return ResponseEntity.ok(pageResponse);
+        PostPageInfo postPageInfo = PostPageInfo.builder(pageNo, sortBy, isDescending).build();
+
+        PostPageResponse postPageResponse = postService.findByMemberId(postPageInfo, memberId);
+        return ResponseEntity.ok(postPageResponse);
     }
     
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId) {
+    public ResponseEntity<PostResponseDto> readPost(
+            @PathVariable Long postId
+    ) {
         PostResponseDto postResponseDto = postService.readPost(postId);
         return ResponseEntity.ok(postResponseDto);
     }
     
     // 회원 페이지에서 몇 개의 게시물을 작성했는지 확인하는 메서드
-    @GetMapping("/member/count")
+    @GetMapping("/member/count") // 회원 파트로 이동 고려
     public ResponseEntity<Long> countPostsByMemberId(@RequestParam Long memberId) {
         Long countPosts = postService.countPostsByMemberId(memberId);
         return ResponseEntity.ok(countPosts);

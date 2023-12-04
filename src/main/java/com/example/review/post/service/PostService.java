@@ -1,13 +1,15 @@
 package com.example.review.post.service;
 
-import com.example.review.exception.CustomException;
-import com.example.review.exception.ErrorCode;
+import com.example.review.comment.pagination.CommentPageInfo;
+import com.example.review.comment.pagination.CommentPageResponse;
+import com.example.review.comment.service.CommentService;
+import com.example.review.config.MsgResponseDto;
 import com.example.review.member.domain.Member;
-import com.example.review.member.repository.MemberRepository;
-import com.example.review.pagination.PageInfo;
-import com.example.review.pagination.PageResponse;
+import com.example.review.member.service.MemberService;
 import com.example.review.post.domain.Post;
 import com.example.review.post.dto.*;
+import com.example.review.post.pagination.PostPageInfo;
+import com.example.review.post.pagination.PostPageResponse;
 import com.example.review.post.repository.PostRepository;
 import com.example.review.post.type.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,54 +29,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final CommentService commentService;
     
-    public void createPost(PostCreateRequestDto postCreateRequestDto) {
-        Member nowMember = memberRepository.findById(postCreateRequestDto.getMemberId()).orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, ErrorCode.MEMBER_NOT_FOUND.getMessage()));
+    public PostResponseDto createPost(PostCreateRequestDto postCreateRequestDto, Member member) {
+        Post post = Post.builder(postCreateRequestDto, member).build();
+        Post savePost = postRepository.save(post);
         
-        Post post = Post.builder()
-                .title(postCreateRequestDto.getTitle())
-                .category(postCreateRequestDto.getCategory())
-                .text(postCreateRequestDto.getText())
-                .member(nowMember)
-                .postCommentCount(0L)
-                .build();
-        
-        postRepository.save(post);
+        CommentPageResponse commentList = loadCommentList(savePost.getPostId());
+        return PostResponseDto.builder(savePost, commentList).build();
     }
     
     @Transactional
-    public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post nowPost = postRepository.findById(postId).orElseThrow(
-                ()->new CustomException(ErrorCode.POST_NOT_FOUND)
-        );
+    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto, Member member) {
         
-        // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
-        if (!nowPost.getMember().getMemberId().equals(postUpdateRequestDto.getMemberId())) {
-            // 예외처리
-        }
+        Post nowPost = memberService.findByPostIdAndMember(postId, member);
         
-        nowPost.setTitle(postUpdateRequestDto.getTitle());
-        nowPost.setCategory(postUpdateRequestDto.getCategory());
-        nowPost.setText(postUpdateRequestDto.getText());
+        nowPost.update(postUpdateRequestDto);
+        
+        CommentPageResponse commentList = loadCommentList(nowPost.getPostId());
+        return PostResponseDto.builder(nowPost, commentList).build();
     }
     
-    public void deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto) {
-        Post deletePost = postRepository.findById(postId).orElseThrow(
-                ()->new CustomException(ErrorCode.POST_NOT_FOUND)
-        );
+    public MsgResponseDto deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto, Member member) {
         
-        // 권한이 있는지 확인 (로그인 기능 구현 후 추가 예정)
-        if (!deletePost.getMember().getMemberId().equals(postDeleteRequestDto.getMemberId())) {
-            //예외처리
-        }
+        
+        Post deletePost = memberService.findByPostIdAndMember(postId, member);
         
         postRepository.delete(deletePost);
+        
+        return new MsgResponseDto("게시글 삭제 성공", HttpStatus.OK.value());
     }
     
-    public PageResponse findAll(PageInfo pageInfo) {
+    public PostPageResponse findAll(PostPageInfo postPageInfo) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
+        Pageable pageable = createPageable(postPageInfo);
         
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAll(pageable);
@@ -83,12 +71,12 @@ public class PostService {
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
-    public PageResponse findByTitle(PageInfo pageInfo, String title) {
+    public PostPageResponse findByTitle(PostPageInfo postPageInfo, String title) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
+        Pageable pageable = createPageable(postPageInfo);
         
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAllByTitle(pageable, title);
@@ -96,12 +84,12 @@ public class PostService {
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
-    public PageResponse findByCategory(PageInfo pageInfo, PostCategory category) {
+    public PostPageResponse findByCategory(PostPageInfo postPageInfo, PostCategory category) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
+        Pageable pageable = createPageable(postPageInfo);
         
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAllByCategory(pageable, category);
@@ -109,12 +97,12 @@ public class PostService {
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
-    public PageResponse findByNickname(PageInfo pageInfo, String nickname) {
+    public PostPageResponse findByNickname(PostPageInfo postPageInfo, String nickname) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
+        Pageable pageable = createPageable(postPageInfo);
         
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAllByMember_Nickname(pageable, nickname);
@@ -122,12 +110,12 @@ public class PostService {
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
-    public PageResponse findByCreatedDate(PageInfo pageInfo, LocalDate createdDate) {
+    public PostPageResponse findByCreatedDate(PostPageInfo postPageInfo, LocalDate createdDate) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
+        Pageable pageable = createPageable(postPageInfo);
         
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAllByPostCreatedDate(pageable, createdDate);
@@ -135,20 +123,21 @@ public class PostService {
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
         
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
-    public PageResponse findByMemberId(PageInfo pageInfo, Long memberId) {
+    // 수정 꼭 필요!!!
+    public PostPageResponse findByMemberId(PostPageInfo postPageInfo, Long memberId) {
         // 정렬 기준에 따라 pageable 객체 초기화
-        Pageable pageable = createPageable(pageInfo);
-        
+        Pageable pageable = createPageable(postPageInfo);
+
         // 찾아온 데이터 Page 객체
         Page<Post> postPage = postRepository.findAllByMember_MemberId(pageable, memberId);
-        
+
         // page 객체에서 post 리스트를 추출하여 responseDtos에 저장
         List<PostListResponseDto> responseDtos = createPostListResponseDto(postPage);
-        
-        return PageResponse.builder(pageInfo, postPage, responseDtos).build();
+
+        return PostPageResponse.builder(postPageInfo, postPage, responseDtos).build();
     }
     
     
@@ -158,19 +147,21 @@ public class PostService {
         }
         Post nowPost = postRepository.findById(postId).get();
         
-        return PostResponseDto.builder(nowPost).build();
+        CommentPageResponse commentList = loadCommentList(postId);
+        
+        return PostResponseDto.builder(nowPost, commentList).build();
     }
     
     public Long countPostsByMemberId(Long memberId) {
         return postRepository.countByMember_MemberId(memberId);
     }
     
-    private Pageable createPageable(PageInfo pageInfo) {
+    private Pageable createPageable(PostPageInfo postPageInfo) {
         Pageable pageable;
-        if (pageInfo.isDescending()) {
-            pageable = PageRequest.of(pageInfo.getPageNo(), pageInfo.getPageSize(), Sort.by(pageInfo.getSortBy()).descending());
+        if (postPageInfo.isDescending()) {
+            pageable = PageRequest.of(postPageInfo.getPageNo(), postPageInfo.getPageSize(), Sort.by(postPageInfo.getSortBy()).descending());
         } else {
-            pageable = PageRequest.of(pageInfo.getPageNo(), pageInfo.getPageSize(), Sort.by(pageInfo.getSortBy()).ascending());
+            pageable = PageRequest.of(postPageInfo.getPageNo(), postPageInfo.getPageSize(), Sort.by(postPageInfo.getSortBy()).ascending());
         }
         return pageable;
     }
@@ -184,5 +175,11 @@ public class PostService {
         }
         
         return responseDtos;
+    }
+    
+    private CommentPageResponse loadCommentList(Long postId){
+        CommentPageInfo commentPageInfo = CommentPageInfo.builder(0).build();
+        CommentPageResponse commentList = commentService.findCommentsByPostId(commentPageInfo, postId);
+        return commentList;
     }
 }

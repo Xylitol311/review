@@ -1,5 +1,6 @@
 package com.example.review.post.repository;
 
+import com.example.review.member.domain.Member;
 import com.example.review.post.domain.Post;
 import com.example.review.post.type.PostCategory;
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAll(Pageable pageable);
@@ -18,4 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByMember_MemberId(Pageable pageable, Long memberId);
     
     Long countByMember_MemberId(Long memberId);
+    
+    Optional<Post> findByPostIdAndMember_MemberId(Long postId, Long memberId);
 }

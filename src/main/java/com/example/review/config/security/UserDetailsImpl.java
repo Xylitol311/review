@@ -1,7 +1,7 @@
-package com.example.review.security;
+package com.example.review.config.security;
 
 import com.example.review.member.domain.Member;
-import com.example.review.member.domain.Role;
+import com.example.review.member.domain.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,8 +33,8 @@ public class UserDetailsImpl implements UserDetails {
     // 사용자의 권한을 GrantedAuthority 로 추상화 및 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {    // authorities를 통해 권한 제어 가능. GrantedAuthority : 현재 사용자가 가지고 있는 권한
-        Role role = member.getRole();
-        String authority = role.getAuthority();
+        UserRoleEnum userRoleEnum = member.getUserRoleEnum();
+        String authority = userRoleEnum.getAuthority();
         
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();

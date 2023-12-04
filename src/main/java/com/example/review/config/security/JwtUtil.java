@@ -1,6 +1,6 @@
-package com.example.review.security;
+package com.example.review.config.security;
 
-import com.example.review.member.domain.Role;
+import com.example.review.member.domain.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -36,14 +36,14 @@ public class JwtUtil {
     
     // JWT 토큰 생성
     // 인증된 토큰을 기반으로 JWT 토큰을 발급
-    public static String createToken(String username, Role role) {
+    public static String createToken(String username, UserRoleEnum userRoleEnum) {
         Date date = new Date();
         
         // 암호화
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)               // 사용자 식별자값(ID). 여기에선 username(loginId) 을 넣음
-                        .claim(AUTHORIZATION_KEY, role)     // 사용자 권한 (key, value)
+                        .claim(AUTHORIZATION_KEY, userRoleEnum)     // 사용자 권한 (key, value)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))   // 만료 시간 : 현재시간 date.getTime() + 위에서 지정한 토큰 만료시간(60분)
                         .setIssuedAt(date)                  // 발급일
                         .signWith(key, signatureAlgorithm)// 암호화 알고리즘 (Secret key, 사용할 알고리즘 종류)

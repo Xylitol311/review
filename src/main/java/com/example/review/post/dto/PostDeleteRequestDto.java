@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDeleteRequestDto {
-    private Long memberId;
+    String username;
 }

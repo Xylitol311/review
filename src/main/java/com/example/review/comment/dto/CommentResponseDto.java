@@ -1,8 +1,6 @@
 package com.example.review.comment.dto;
 
 import com.example.review.comment.domain.Comment;
-import com.example.review.post.domain.Post;
-import com.example.review.post.dto.PostResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,6 @@
 package com.example.review.comment.domain;
 
 import com.example.review.comment.dto.CommentRequestDto;
-import com.example.review.comment.dto.CommentResponseDto;
 import com.example.review.member.domain.Member;
 import com.example.review.post.domain.Post;
 import lombok.*;

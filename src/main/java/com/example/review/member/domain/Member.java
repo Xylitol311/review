@@ -23,7 +23,7 @@ public class Member {
     private String nickname;
     private String password;
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private UserRoleEnum userRoleEnum;
     @CreatedDate
     private LocalDate signUpDate;
 }

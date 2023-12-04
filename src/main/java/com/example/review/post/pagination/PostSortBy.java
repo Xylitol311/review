@@ -1,4 +1,4 @@
-package com.example.review.pagination;
+package com.example.review.post.pagination;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

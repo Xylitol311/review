@@ -1,4 +1,4 @@
-package com.example.review.security;
+package com.example.review.config.security;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
