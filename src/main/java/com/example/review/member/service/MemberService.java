@@ -7,7 +7,7 @@ import com.example.review.exception.CustomException;
 import com.example.review.exception.ErrorCode;
 import com.example.review.member.domain.Member;
 import com.example.review.member.domain.UserRoleEnum;
-import com.example.review.member.dto.MemberLoginRequest;
+import com.example.review.member.dto.LoginRequestDto;
 import com.example.review.member.dto.MemberSignupRequest;
 import com.example.review.member.repository.MemberRepository;
 import com.example.review.post.domain.Post;
@@ -73,21 +73,21 @@ public class MemberService {
         memberRepository.save(member);
     }
     
-    public void login(MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
-        String loginId = memberLoginRequest.getUsername();
-        String password = memberLoginRequest.getPassword();
-        
-        Member member = memberRepository.findByLoginId(loginId).orElseThrow(
-                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-        );
-        
-        // 비밀번호 일치 여부 확인
-        if (!member.getPassword().equals(password)) {
-            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
-            //수정 필요
-            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, JwtUtil.createToken(member.getLoginId()));
-        }
-    }
+//    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+//        String loginId = loginRequestDto.getUsername();
+//        String password = loginRequestDto.getPassword();
+//
+//        Member member = memberRepository.findByLoginId(loginId).orElseThrow(
+//                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+//        );
+//
+//        // 비밀번호 일치 여부 확인
+//        if (!member.getPassword().equals(password)) {
+//            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+//            //수정 필요
+//            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, JwtUtil.createToken(member.getLoginId()));
+//        }
+//    }
     
     public Post findByPostIdAndMember(Long postId, Member member) {
         Post post;

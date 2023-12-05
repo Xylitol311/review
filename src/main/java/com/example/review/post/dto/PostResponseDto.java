@@ -27,7 +27,18 @@ public class PostResponseDto {
     private CommentPageResponse commentList;
     
     // 추후 댓글도 추가
-    
+    public static PostResponseDtoBuilder builder(Post post) {
+        return PostResponseDtoBuilder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .category(post.getCategory())
+                .text(post.getText())
+                .postCreatedDate(post.getPostCreatedDate())
+                .postUpdatedDate(post.getPostUpdatedDate())
+                .postCommentCount(post.getPostCommentCount())
+                .nickname(post.getMember().getNickname());
+//                .commentList(commentList);
+    }
     public static PostResponseDtoBuilder builder(Post post, CommentPageResponse commentList) {
         return PostResponseDtoBuilder()
                 .postId(post.getPostId())
@@ -37,7 +48,7 @@ public class PostResponseDto {
                 .postCreatedDate(post.getPostCreatedDate())
                 .postUpdatedDate(post.getPostUpdatedDate())
                 .postCommentCount(post.getPostCommentCount())
-                .nickname(post.getMember().getNickname())
-                .commentList(commentList);
+                .nickname(post.getMember().getNickname());
+//                .commentList(commentList);
     }
 }

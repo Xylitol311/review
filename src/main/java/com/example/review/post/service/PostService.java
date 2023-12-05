@@ -36,8 +36,10 @@ public class PostService {
         Post post = Post.builder(postCreateRequestDto, member).build();
         Post savePost = postRepository.save(post);
         
-        CommentPageResponse commentList = loadCommentList(savePost.getPostId());
-        return PostResponseDto.builder(savePost, commentList).build();
+//        CommentPageResponse commentList = loadCommentList(savePost.getPostId());
+        
+        return PostResponseDto.builder(savePost).build();
+//        return PostResponseDto.builder(savePost, commentList).build();
     }
     
     @Transactional
@@ -47,8 +49,11 @@ public class PostService {
         
         nowPost.update(postUpdateRequestDto);
         
-        CommentPageResponse commentList = loadCommentList(nowPost.getPostId());
-        return PostResponseDto.builder(nowPost, commentList).build();
+        
+        return PostResponseDto.builder(nowPost).build();
+        
+//        CommentPageResponse commentList = loadCommentList(nowPost.getPostId());
+//        return PostResponseDto.builder(nowPost, commentList).build();
     }
     
     public MsgResponseDto deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto, Member member) {

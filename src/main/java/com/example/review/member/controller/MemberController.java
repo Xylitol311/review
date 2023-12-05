@@ -1,6 +1,6 @@
 package com.example.review.member.controller;
 
-import com.example.review.member.dto.MemberLoginRequest;
+import com.example.review.member.dto.LoginRequestDto;
 import com.example.review.member.dto.MemberSignupRequest;
 import com.example.review.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +26,9 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
-        memberService.login(memberLoginRequest, response);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+//        memberService.login(loginRequestDto, response);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

@@ -1,7 +1,7 @@
 package com.example.review.config.security;
 
 import com.example.review.member.domain.UserRoleEnum;
-import com.example.review.member.dto.MemberLoginRequest;
+import com.example.review.member.dto.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,10 +28,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         
         try {
-            MemberLoginRequest memberLoginRequest = new ObjectMapper().readValue(request.getInputStream(), MemberLoginRequest.class);     // JSON 형식의 데이터를 변환(username(LoginID), password, 변환할 타입)
+            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);     // JSON 형식의 데이터를 변환(username(LoginID), password, 변환할 타입)
             
             return getAuthenticationManager().authenticate(  // 생성된 Authentication객체를 가지고 AuthenticationManager에게 위임
-                    new UsernamePasswordAuthenticationToken(memberLoginRequest.getUsername(), memberLoginRequest.getPassword(),null)    // 로그인 요청에 입력된 username, password 정보로 토큰을 생성
+                    new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword(),null)    // 로그인 요청에 입력된 username, password 정보로 토큰을 생성
             );
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -44,9 +44,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername(); // username
-        UserRoleEnum userRoleEnum = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserRoleEnum();  // role
+        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserRoleEnum();  // role
         
-        String token = jwtUtil.createToken(username, userRoleEnum); // 로그인 성공 시, username, role을 담은 토큰 생성
+        String token = jwtUtil.createToken(username, role); // 로그인 성공 시, username, role을 담은 토큰 생성
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token); // 헤더에 해당 토큰 추가
     }
     
