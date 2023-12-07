@@ -1,6 +1,5 @@
 package com.example.review.post.controller;
 
-import com.example.review.comment.pagination.CommentPageInfo;
 import com.example.review.config.security.UserDetailsImpl;
 import com.example.review.post.dto.PostCreateRequestDto;
 import com.example.review.post.dto.PostDeleteRequestDto;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
 

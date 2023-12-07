@@ -2,12 +2,10 @@ package com.example.review.member.service;
 
 import com.example.review.comment.domain.Comment;
 import com.example.review.comment.repository.CommentRepository;
-import com.example.review.config.security.JwtUtil;
 import com.example.review.exception.CustomException;
 import com.example.review.exception.ErrorCode;
 import com.example.review.member.domain.Member;
 import com.example.review.member.domain.UserRoleEnum;
-import com.example.review.member.dto.LoginRequestDto;
 import com.example.review.member.dto.MemberSignupRequest;
 import com.example.review.member.repository.MemberRepository;
 import com.example.review.post.domain.Post;
@@ -17,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static com.example.review.exception.ErrorCode.*;

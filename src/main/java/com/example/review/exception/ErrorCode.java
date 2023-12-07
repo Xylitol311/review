@@ -16,7 +16,8 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not found."),
     AUTHORIZATION(HttpStatus.BAD_REQUEST, "You do not have permission."),
     NOT_FOUND_POST_OR_AUTHORIZATION(HttpStatus.BAD_REQUEST, "Post not found or You do not have permission."),
-    NOT_FOUND_COMMENT_OR_AUTHORIZATION(HttpStatus.BAD_REQUEST, "Comment not found or You do not have permission.");
+    NOT_FOUND_COMMENT_OR_AUTHORIZATION(HttpStatus.BAD_REQUEST, "Comment not found or You do not have permission."),
+    AUTHORIZATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "authorization server error");
     
     private HttpStatus status;
     private String message;

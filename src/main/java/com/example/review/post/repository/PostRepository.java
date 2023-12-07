@@ -1,6 +1,5 @@
 package com.example.review.post.repository;
 
-import com.example.review.member.domain.Member;
 import com.example.review.post.domain.Post;
 import com.example.review.post.type.PostCategory;
 import org.springframework.data.domain.Page;

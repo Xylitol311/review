@@ -1,6 +1,5 @@
 package com.example.review.post.service;
 
-import com.example.review.comment.pagination.CommentPageInfo;
 import com.example.review.comment.pagination.CommentPageResponse;
 import com.example.review.comment.service.CommentService;
 import com.example.review.config.MsgResponseDto;
@@ -36,10 +35,9 @@ public class PostService {
         Post post = Post.builder(postCreateRequestDto, member).build();
         Post savePost = postRepository.save(post);
         
-//        CommentPageResponse commentList = loadCommentList(savePost.getPostId());
+        CommentPageResponse commentList = new CommentPageResponse();
         
-        return PostResponseDto.builder(savePost).build();
-//        return PostResponseDto.builder(savePost, commentList).build();
+        return PostResponseDto.builder(savePost, commentList).build();
     }
     
     @Transactional
@@ -50,10 +48,8 @@ public class PostService {
         nowPost.update(postUpdateRequestDto);
         
         
-        return PostResponseDto.builder(nowPost).build();
-        
-//        CommentPageResponse commentList = loadCommentList(nowPost.getPostId());
-//        return PostResponseDto.builder(nowPost, commentList).build();
+        CommentPageResponse commentList = loadCommentList(nowPost.getPostId());
+        return PostResponseDto.builder(nowPost, commentList).build();
     }
     
     public MsgResponseDto deletePost(Long postId, PostDeleteRequestDto postDeleteRequestDto, Member member) {
@@ -183,8 +179,7 @@ public class PostService {
     }
     
     private CommentPageResponse loadCommentList(Long postId){
-        CommentPageInfo commentPageInfo = CommentPageInfo.builder(0).build();
-        CommentPageResponse commentList = commentService.findCommentsByPostId(commentPageInfo, postId);
+        CommentPageResponse commentList = commentService.readComments(0, postId);
         return commentList;
     }
 }

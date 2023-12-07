@@ -20,11 +20,11 @@ public class CommentPageResponse { // 추후 댓글 파트 페이징 처리에�
     private int totalPages;
     private boolean last;
     
-    public static CommentPageResponseBuilder builder(CommentPageInfo commentPageInfo, Page<Comment> page, List<CommentResponseDto> responseDtos) {
+    public static CommentPageResponseBuilder builder(int pageNo, Page<Comment> page, List<CommentResponseDto> responseDtos) {
         return CommentPageResponseBuilder()
                 .content(responseDtos)
-                .pageNo(commentPageInfo.getPageNo())
-                .pageSize(commentPageInfo.getPageSize())
+                .pageNo(pageNo)
+                .pageSize(10)
                 .totalElements(page.getTotalElements())
                 .totalPages(page.getTotalPages())
                 .last(page.isLast());
