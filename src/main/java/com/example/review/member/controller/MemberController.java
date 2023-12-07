@@ -1,6 +1,5 @@
 package com.example.review.member.controller;
 
-import com.example.review.member.dto.LoginRequestDto;
 import com.example.review.member.dto.MemberSignupRequest;
 import com.example.review.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController

@@ -70,7 +70,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/user/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/post/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/comment/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/comments/**").permitAll()
                         .anyRequest().authenticated());
         
         return http.build();
