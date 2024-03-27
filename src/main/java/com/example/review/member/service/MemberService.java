@@ -112,7 +112,7 @@ public class MemberService {
             comment = commentRepository.findById(commentId).orElseThrow(
                     () -> new CustomException(COMMENT_NOT_FOUND)
             );
-            // USER
+        // USER
         } else {
             comment = commentRepository.findByCommentIdAndMember_MemberId(commentId, member.getMemberId()).orElseThrow(
                     () -> new CustomException(NOT_FOUND_COMMENT_OR_AUTHORIZATION)
